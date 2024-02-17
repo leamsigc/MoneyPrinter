@@ -1,7 +1,16 @@
 <template>
   <naive-config>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <NLoadingBarProvider>
+      <NDialogProvider>
+        <NNotificationProvider>
+          <NMessageProvider>
+            <NuxtLayout>
+              <NuxtPage />
+            </NuxtLayout>
+            <NGlobalStyle />
+          </NMessageProvider>
+        </NNotificationProvider>
+      </NDialogProvider>
+    </NLoadingBarProvider>
   </naive-config>
 </template>

@@ -34,16 +34,41 @@ const menuOptions: MenuLinkRoute[] = [
     path: "/docs",
   },
 ];
+
+/*----------  Menu state   ----------*/
+const { getCollapsed } = useMenuSetting();
 </script>
 
 <template>
-  <NaiveLayoutSidebar has-sider position="absolute" :routes="menuOptions">
-    <template #start>
-      <h1 class="text-3xl leading-10 font-bold">Money Printer</h1>
-    </template>
-    <div class="min-h-screen bg-gray-100">
-      <slot></slot>
-    </div>
-  </NaiveLayoutSidebar>
+  <NEl tag="div" class="flex flex-col flex-1 h-full w-full">
+    <NaiveLayoutSidebar
+      :routes="menuOptions"
+      :drawer-closable="true"
+      :drawer-routes="menuOptions"
+    >
+      <n-layout position="absolute">
+        <n-layout-header
+          style="height: 64px"
+          :bordered="false"
+          class="bg-transparent px-10"
+        >
+          <HeaderLayout />
+        </n-layout-header>
+        <n-layout position="absolute" style="top: 64px; bottom: 64px">
+          <n-layout content-style="padding: 24px;">
+            <slot />
+          </n-layout>
+        </n-layout>
+        <n-layout-footer
+          :bordered="false"
+          position="absolute"
+          style="height: 64px; padding: 24px"
+        >
+          Money Printer UI
+        </n-layout-footer>
+      </n-layout>
+    </NaiveLayoutSidebar>
+    <SearchDialog />
+  </NEl>
 </template>
 <style scoped></style>

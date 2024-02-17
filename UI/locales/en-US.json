@@ -1,0 +1,20 @@
+{
+  "layouts": {
+    "header": {
+      "toggleFullScreen": "Full Screen"
+    }
+  },
+  "searchDialog": {
+    "searchPlaceholder": "Search...",
+    "applications": "Applications",
+    "chatBot": "Chat",
+    "actions": "Actions",
+    "action": "Full Screen",
+    "noResultsFound": "No Resoults for the fallowing qury: ",
+    "toSelectTooltip": "Select",
+    "toNavigateTooltip": "Navigate",
+    "actionsOptions": {
+      "themeToggle": "Switch theme"
+    }
+  }
+}

@@ -8,7 +8,12 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxt/content",
     "nuxt-icon",
+    "@pinia/nuxt",
+    "@unocss/nuxt",
+    "@nuxtjs/i18n",
+    "nuxt-lodash",
   ],
+  css: ["~/assets/scss/main.scss"],
   tailwindcss: {
     exposeConfig: {
       write: true,
@@ -18,5 +23,16 @@ export default defineNuxtConfig({
     markdown: {
       anchorLinks: false,
     },
+  },
+  i18n: {
+    locales: [
+      {
+        code: "en",
+        file: "en-US.json",
+      },
+    ],
+    lazy: true,
+    langDir: "locales",
+    defaultLocale: "en",
   },
 });
