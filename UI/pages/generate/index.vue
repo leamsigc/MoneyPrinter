@@ -38,13 +38,79 @@ const video = ref({
           />
         </n-form-item>
       </section>
-      <section class="setting bg-slate-800 rounded-lg min-h-40">
-        settings
+      <section class="setting bg-slate-800 rounded-lg min-h-40 p-5">
+        <header class="flex items-center">
+          <Icon name="material-symbols:settings" size="24" />
+          <span class="text-lg ml-2">Settings</span>
+          <div class="ml-auto">
+            <n-button ghost text>
+              <template #icon>
+                <Icon name="pepicons:dots-x" />
+              </template>
+            </n-button>
+          </div>
+        </header>
+        <article class="mt-5 opacity-60 flex flex-col">
+          <span class="font-bold"> Search:</span>
+          <span class="text-sm mt-2 truncate"> Nice video,Mountain</span>
+        </article>
       </section>
-      <section class="voice bg-slate-800 rounded-lg min-h-40">voice</section>
-      <section class="music bg-slate-800 rounded-lg min-h-40">music</section>
-      <section class="subtitle bg-slate-800 rounded-lg min-h-40">
-        subtitle
+      <section class="voice bg-slate-800 rounded-lg min-h-40 p-5">
+        <header class="flex items-center">
+          <Icon name="icon-park-outline:voice" size="24" />
+          <span class="text-lg ml-2">Voice</span>
+          <div class="ml-auto">
+            <n-button ghost text>
+              <template #icon>
+                <Icon name="pepicons:dots-x" />
+              </template>
+            </n-button>
+          </div>
+        </header>
+        <article
+          class="mt-8 opacity-80 text-center flex items-center justify-center"
+        >
+          <Icon name="material-symbols:person" size="36" />
+          <span class="ml-2 font-black text-lg"> US-Male</span>
+        </article>
+      </section>
+      <section class="music bg-slate-800 rounded-lg min-h-40 p-5">
+        <header class="flex items-center">
+          <Icon name="icon-park-outline:music" size="24" />
+          <span class="text-lg ml-2">Music</span>
+          <div class="ml-auto">
+            <n-button ghost text>
+              <template #icon>
+                <Icon name="pepicons:dots-x" />
+              </template>
+            </n-button>
+          </div>
+        </header>
+        <article class="mt-8 opacity-80 flex items-center">
+          <section class="w-10 h-10 bg-slate-950 rounded-md"></section>
+          <section class="ml-2 flex flex-col text-sm">
+            <span>The blue sky...</span>
+            <span class="opacity-60">Sombreros Musical</span>
+          </section>
+        </article>
+      </section>
+      <section class="subtitle bg-slate-800 rounded-lg min-h-40 p-5">
+        <header class="flex items-center">
+          <Icon name="material-symbols:subtitles" size="26" />
+          <span class="text-lg ml-2">Subtitle</span>
+          <div class="ml-auto">
+            <n-button ghost text>
+              <template #icon>
+                <Icon name="ph:dots-nine-thin" />
+              </template>
+            </n-button>
+          </div>
+        </header>
+        <article
+          class="mt-8 opacity-80 text-center flex items-center justify-center"
+        >
+          <span>Subtitle here</span>
+        </article>
       </section>
     </section>
     <section class="col-span-2">

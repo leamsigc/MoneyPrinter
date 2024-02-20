@@ -46,7 +46,6 @@ if not os.path.exists("../static/Songs"):
     os.makedirs("../static/Songs")
 if not os.path.exists("../static/generated_videos"):
     os.makedirs("../static/generated_videos") 
-
 # Generation Endpoint
 @app.route("/api/generate", methods=["POST"])
 def generate():
