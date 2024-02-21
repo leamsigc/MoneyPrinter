@@ -16,5 +16,16 @@
     "actionsOptions": {
       "themeToggle": "Switch theme"
     }
+  },
+  "video": {
+    "generate": {
+      "step": {
+        "one": {
+          "title": "Please enter a video subject",
+          "cancel": "Cancel",
+          "generate": "Generate script"
+        }
+      }
+    }
   }
 }

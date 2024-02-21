@@ -4,6 +4,7 @@ import uuid
 import requests
 import srt_equalizer
 import assemblyai as aai
+from uuid import uuid4
 
 
 from settings import *
@@ -20,7 +21,7 @@ load_dotenv("../.env")
 ASSEMBLY_AI_API_KEY = os.getenv("ASSEMBLY_AI_API_KEY")
 
 
-def save_video(video_url: str, directory: str = "../temp") -> str:
+def save_video(video_url: str, directory: str = "../static/assets/temp") -> str:
     """
     Saves a video from a given URL and returns the path to the video.
 
@@ -122,7 +123,7 @@ def generate_subtitles(audio_path: str, sentences: List[str], audio_clips: List[
         srt_equalizer.equalize_srt_file(srt_path, srt_path, max_chars)
 
     # Save subtitles
-    subtitles_path = f"../subtitles/{uuid.uuid4()}.srt"
+    subtitles_path = f"../static/assets/subtitles/{uuid.uuid4()}.srt"
 
     if ASSEMBLY_AI_API_KEY is not None and ASSEMBLY_AI_API_KEY != "":
         print(colored("[+] Creating subtitles using AssemblyAI", "blue"))
@@ -130,9 +131,6 @@ def generate_subtitles(audio_path: str, sentences: List[str], audio_clips: List[
     else:
         print(colored("[+] Creating subtitles locally", "blue"))
         subtitles = __generate_subtitles_locally(sentences, audio_clips)
-        # print(colored("[-] Local subtitle generation has been disabled for the time being.", "red"))
-        # print(colored("[-] Exiting.", "red"))
-        # sys.exit(1)
 
     with open(subtitles_path, "w") as file:
         file.write(subtitles)
@@ -159,7 +157,7 @@ def combine_videos(video_paths: List[str], max_duration: int, max_clip_duration:
         str: The path to the combined video.
     """
     video_id = uuid.uuid4()
-    combined_video_path = f"../temp/{video_id}-combined.mp4"
+    combined_video_path = f"../static/assets/temp/{video_id}-combined.mp4"
     
     # Required duration of each clip
     req_dur = max_duration / len(video_paths)
@@ -231,22 +229,22 @@ def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str,
     print(colored("[+] Starting video generation...", "green"))
 
     # Get the Settings
-    settings = get_settings()
+    globalSettings = get_settings()
     # Make a generator that returns a TextClip when called with consecutive
     generator = lambda txt: TextClip(
         txt,
-        font=settings["font"],
-        fontsize=settings["fontsize"],
-        color=settings["color"],
-        stroke_color=settings["stroke_color"],
-        stroke_width=settings["stroke_width"],
+        font=globalSettings["fontSettings"]["font"],
+        fontsize=globalSettings["fontSettings"]["fontsize"],
+        color=globalSettings["fontSettings"]["color"],
+        stroke_color=globalSettings["fontSettings"]["stroke_color"],
+        stroke_width=globalSettings["fontSettings"]["stroke_width"],
     )
 
     # Split the subtitles position into horizontal and vertical
-    horizontal_subtitles_position, vertical_subtitles_position = settings["subtitles_position"].split(",")
+    horizontal_subtitles_position, vertical_subtitles_position = globalSettings["fontSettings"]["subtitles_position"].split(",")
 
-    # if subtitle position is not the same as the setting we override
-    if subtitles_position != settings["subtitles_position"]:
+    # if subtitle position is not the same as the setting and is not empty we override
+    if subtitles_position != globalSettings["fontSettings"]["subtitles_position"] and subtitles_position != "":
         horizontal_subtitles_position, vertical_subtitles_position = subtitles_position.split(",")
         
     # Burn the subtitles into the video
@@ -263,6 +261,7 @@ def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str,
     print(colored("[+] Audio Done...", "green"))
 
     print(colored("[+] Writing video...", "green"))
-    result.write_videofile("../temp/output.mp4", threads=3)
+    video_name = f"static/assets/{uuid4()}-final.mp4"
+    result.write_videofile(f"../{video_name}", threads=3)
 
-    return "output.mp4"
+    return video_name

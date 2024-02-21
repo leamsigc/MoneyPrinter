@@ -85,10 +85,10 @@ def choose_random_song() -> str:
         str: The path to the chosen song.
     """
     try:
-        songs = os.listdir("../Songs")
+        songs = os.listdir("../static/assets/music")
         song = random.choice(songs)
         logger.info(colored(f"Chose song: {song}", "green"))
-        return f"../Songs/{song}"
+        return f"../static/assets/music/{song}"
     except Exception as e:
         logger.error(colored(f"Error occurred while choosing random song: {str(e)}", "red"))
 
