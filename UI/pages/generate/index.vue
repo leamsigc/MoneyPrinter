@@ -22,7 +22,7 @@ const video = ref({
 
   finalVideoUrl: "",
 });
-const showModal = ref(true);
+const showModal = ref(false);
 const extraPrompt = ref(false);
 
 const currentState = ref<"script" | "loading" | "Error">("script");
@@ -263,7 +263,7 @@ const HandleGenerateVideo = async () => {
               <video
                 v-else
                 class="aspect-[9/16] max-w-sm rounded-3xl"
-                :src="`http://localhost:8080/static/generated_videos/${video.finalVideoUrl}`"
+                :src="`http://localhost:8080/${video.finalVideoUrl}`"
                 controls
               ></video>
             </div>
