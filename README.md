@@ -1,10 +1,10 @@
 # This is a fork from the MoneyPrinter project but made by FujiwaraChoki (https://github.com/FujiwaraChoki) this repo added the fallowing:
 
 <!-- Add image to markdown -->
-![Screen1](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screen1.png)
-![Screen2](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot2.png)
-![Screen2](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot2.png)
-![Screen3](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot3.png)
+![Screen1](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screen1.png?raw=true)
+![Screen2](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot2.png?raw=true)
+![Screen2](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot2.png?raw=true)
+![Screen3](https://github.com/leamsigc/MoneyPrinter/tree/main/static/images/Screenshot3.png?raw=true)
 - [x] Generate the script first
 - [x] Let user review the script before the audio and video generation
 - [x] Let the user view all the generated video in a single place
