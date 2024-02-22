@@ -1,5 +1,12 @@
 
-
+export const useApiSettings = () => {
+    const API_SETTINGS = useLocalStorage("API_SETTINGS", {
+        URL:"http://localhost:8080",
+    })
+    return {
+        API_SETTINGS
+    }
+}
 export const useGlobalSettings = () => {
     const globalSettings = useLocalStorage("globalSettings", {
         font: "Roboto",

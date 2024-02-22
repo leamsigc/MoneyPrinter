@@ -13,16 +13,8 @@
 const API_URL = "http://localhost:8080";
 
 const { globalSettings } = useGlobalSettings();
-const video = ref({
-  script: "",
-  voice: "en_us_001",
-  videoSubject: "",
-  extraPrompt: "",
-  search: "Hot chile,hot paper,hot souce",
-
-  finalVideoUrl: "",
-});
-const showModal = ref(false);
+const { video } = useVideoSettings();
+const showModal = ref(true);
 const extraPrompt = ref(false);
 
 const currentState = ref<"script" | "loading" | "Error">("script");
@@ -43,6 +35,8 @@ const HandleGenerateScript = async () => {
     });
 
     video.value.script = data.script;
+    console.log({ data });
+
     video.value.search = data.search.join(",");
     currentState.value = "script";
   } catch (error) {
@@ -77,6 +71,18 @@ const HandleGenerateVideo = async () => {
     currentState.value = "Error";
   }
 };
+
+const settingsModal = ref<"ALL" | "VOICE" | "SUBTITLE" | "MUSIC" | "IDLE">(
+  "IDLE"
+);
+const settingsModalState = computed(() => {
+  return settingsModal.value !== "IDLE";
+});
+const HandleUpdateSettings = async (
+  type: "ALL" | "VOICE" | "SUBTITLE" | "MUSIC"
+) => {
+  settingsModal.value = type;
+};
 </script>
 
 <template>
@@ -91,7 +97,7 @@ const HandleGenerateVideo = async () => {
       <n-form-item :show-label="false" class="mt-10">
         <n-input
           v-model:value="video.videoSubject"
-          placeholder="Video Subject"
+          :placeholder="$t('video.generate.step.one.videoSubject.placeholder')"
           type="textarea"
           show-count
           clearable
@@ -109,7 +115,9 @@ const HandleGenerateVideo = async () => {
             <n-form-item :show-label="false" class="mt-10">
               <n-input
                 v-model:value="video.extraPrompt"
-                placeholder="Extra prompt"
+                :placeholder="
+                  $t('video.generate.step.one.extraPrompt.placeholder')
+                "
                 type="textarea"
                 show-count
                 clearable
@@ -143,7 +151,7 @@ const HandleGenerateVideo = async () => {
             <n-form-item :show-label="false" path="script">
               <n-input
                 v-model:value="video.script"
-                placeholder="Video script"
+                :placeholder="$t('video.generate.step.two.script.placeholder')"
                 type="textarea"
                 show-count
                 clearable
@@ -160,9 +168,11 @@ const HandleGenerateVideo = async () => {
           >
             <header class="flex items-center">
               <Icon name="material-symbols:settings" size="24" />
-              <span class="text-lg ml-2">Settings</span>
+              <span class="text-lg ml-2">
+                {{ $t("view.generate.setting.label") }}
+              </span>
               <div class="ml-auto">
-                <n-button ghost text>
+                <n-button ghost text @click="HandleUpdateSettings('ALL')">
                   <template #icon>
                     <Icon name="pepicons:dots-x" />
                   </template>
@@ -179,9 +189,11 @@ const HandleGenerateVideo = async () => {
           >
             <header class="flex items-center">
               <Icon name="icon-park-outline:voice" size="24" />
-              <span class="text-lg ml-2">Voice</span>
+              <span class="text-lg ml-2">
+                {{ $t("view.generate.voice.label") }}
+              </span>
               <div class="ml-auto">
-                <n-button ghost text>
+                <n-button ghost text @click="HandleUpdateSettings('VOICE')">
                   <template #icon>
                     <Icon name="pepicons:dots-x" />
                   </template>
@@ -192,7 +204,9 @@ const HandleGenerateVideo = async () => {
               class="mt-8 opacity-80 text-center flex items-center justify-center"
             >
               <Icon name="material-symbols:person" size="36" />
-              <span class="ml-2 font-black text-lg"> US-Male</span>
+              <span class="ml-2 font-black text-lg">
+                {{ globalSettings.voice }}
+              </span>
             </article>
           </section>
           <section
@@ -200,9 +214,11 @@ const HandleGenerateVideo = async () => {
           >
             <header class="flex items-center">
               <Icon name="icon-park-outline:music" size="24" />
-              <span class="text-lg ml-2">Music</span>
+              <span class="text-lg ml-2">
+                {{ $t("view.generate.music.label") }}
+              </span>
               <div class="ml-auto">
-                <n-button ghost text>
+                <n-button ghost text @click="HandleUpdateSettings('MUSIC')">
                   <template #icon>
                     <Icon name="pepicons:dots-x" />
                   </template>
@@ -212,7 +228,7 @@ const HandleGenerateVideo = async () => {
             <article class="mt-8 opacity-80 flex items-center">
               <section class="w-10 h-10 bg-slate-950 rounded-md"></section>
               <section class="ml-2 flex flex-col text-sm">
-                <span>The blue sky...</span>
+                <span>{{ video.selectedAudio || "No music selected" }}</span>
                 <span class="opacity-60">Sombreros Musical</span>
               </section>
             </article>
@@ -222,9 +238,11 @@ const HandleGenerateVideo = async () => {
           >
             <header class="flex items-center">
               <Icon name="material-symbols:subtitles" size="26" />
-              <span class="text-lg ml-2">Subtitle</span>
+              <span class="text-lg ml-2">
+                {{ $t("view.generate.subtitles.label") }}
+              </span>
               <div class="ml-auto">
-                <n-button ghost text>
+                <n-button ghost text @click="HandleUpdateSettings('SUBTITLE')">
                   <template #icon>
                     <Icon name="ph:dots-nine-thin" />
                   </template>
@@ -234,13 +252,21 @@ const HandleGenerateVideo = async () => {
             <article
               class="mt-8 opacity-80 text-center flex items-center justify-center"
             >
-              <span>Subtitle here</span>
+              <span
+                class="font-black text-lg"
+                :style="{ color: globalSettings.color }"
+              >
+                Subtitle here
+              </span>
             </article>
           </section>
         </section>
         <section class="col-span-2">
-          <header class="col-span-5 flex justify-end">
-            <n-button type="success" size="large">Generate</n-button>
+          <header
+            class="col-span-5 flex justify-end"
+            v-if="video.finalVideoUrl"
+          >
+            <n-button type="success" size="large">Regenerate</n-button>
           </header>
           <section class="grid place-content-center">
             <div
@@ -276,5 +302,20 @@ const HandleGenerateVideo = async () => {
       <p>Generating video | script ...</p>
     </template>
   </n-spin>
+
+  <n-modal
+    v-model:show="settingsModalState"
+    :mask-closable="false"
+    closable
+    @close="settingsModal = 'IDLE'"
+    preset="card"
+    class="max-w-3xl"
+    :content-class="'dark:bg-gray-950 p-10 py-16 dark:text-slate-100'"
+    :header-class="'dark:bg-gray-950 p-10 py-16 dark:text-slate-100'"
+  >
+    <div class="p-10" v-if="settingsModal !== 'IDLE'">
+      <GenerateScript :active-tab="settingsModal" />
+    </div>
+  </n-modal>
 </template>
 <style scoped></style>

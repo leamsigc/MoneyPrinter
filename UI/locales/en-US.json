@@ -23,8 +23,35 @@
         "one": {
           "title": "Please enter a video subject",
           "cancel": "Cancel",
-          "generate": "Generate script"
+          "generate": "Generate script",
+          "videoSubject": {
+            "placeholder": "Video subject..."
+          },
+          "extraPrompt": {
+            "placeholder": "Extra prompt..."
+          }
+        },
+        "two": {
+          "script": {
+            "placeholder": "Video generated script..."
+          }
         }
+      }
+    }
+  },
+  "view": {
+    "generate": {
+      "setting": {
+        "label": "Settings"
+      },
+      "music": {
+        "label": "Music"
+      },
+      "voice": {
+        "label": "Voice"
+      },
+      "subtitles": {
+        "label": "Subtitle"
       }
     }
   }

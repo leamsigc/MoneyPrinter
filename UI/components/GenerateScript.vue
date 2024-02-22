@@ -10,7 +10,15 @@
  * @todo [ ] Integration test.
  * @todo [✔] Update the typescript.
  */
-const activeTab = ref("script");
+
+interface Props {
+  activeTab: "ALL" | "VOICE" | "SUBTITLE" | "MUSIC";
+}
+const props = withDefaults(defineProps<Props>(), {
+  activeTab: "ALL",
+});
+const { activeTab } = toRefs(props);
+
 const voiceOptions = ref<{ label: string; value: string }[]>([]);
 const availableSongs = ref<string[]>([]);
 const finalVideo = ref("");
@@ -94,7 +102,7 @@ const HandleGenerateSubject = async () => {
     videoModel.value.script = data.script;
     videoModel.value.search = data.search.join(",");
 
-    activeTab.value = "review";
+    activeTab.value = "SUBTITLE";
   } catch (error) {
     console.log({ error });
   } finally {
@@ -123,7 +131,7 @@ const HandleGenerateVideo = async () => {
     });
 
     finalVideo.value = data.finalVideo;
-    activeTab.value = "audio";
+    activeTab.value = "MUSIC";
   } catch (error) {
     console.log({ error });
   } finally {
@@ -163,7 +171,7 @@ const HandleAddAudio = async () => {
       v-model:value="activeTab"
       display-directive="if"
     >
-      <n-tab-pane name="script" tab="Generate script">
+      <n-tab-pane name="ALL" tab="All">
         <n-form
           ref="formRef"
           class="max-w-screen-md"
@@ -209,56 +217,15 @@ const HandleAddAudio = async () => {
           </n-form-item>
         </n-form>
       </n-tab-pane>
-      <n-tab-pane name="review" tab="Review script">
-        <n-form
-          ref="reviewFormRef"
-          class="max-w-screen-md"
-          :model="videoModel"
-          :rules="videoRules"
-          size="large"
-          :loading="isLoading"
-        >
-          <n-form-item label="Voice:" path="voice">
-            <n-select
-              v-model:value="videoModel.voice"
-              :options="voiceOptions"
-            />
-          </n-form-item>
-          <n-form-item label="Video Script:" path="script">
-            <n-input
-              v-model:value="videoModel.script"
-              placeholder="Video script"
-              type="textarea"
-              show-count
-              clearable
-              :autosize="{
-                minRows: 10,
-                maxRows: 20,
-              }"
-            />
-          </n-form-item>
-          <n-form-item label="Search terms:" path="search">
-            <n-input
-              v-model:value="videoModel.search"
-              placeholder="Search terms"
-              type="textarea"
-              show-count
-              clearable
-            />
-          </n-form-item>
-          <n-form-item>
-            <n-button
-              @click="HandleGenerateVideo"
-              type="primary"
-              :loading="isLoading"
-              :disabled="isLoading"
-            >
-              Generate the video
-            </n-button>
-          </n-form-item>
-        </n-form>
+      <n-tab-pane name="VOICE" tab="Voice">
+        <n-form-item label="Voice:" path="voice">
+          <n-select v-model:value="videoModel.voice" :options="voiceOptions" />
+        </n-form-item>
       </n-tab-pane>
-      <n-tab-pane name="audio" tab="Select audio">
+      <n-tab-pane name="MUSIC" tab="Audio">
+        <MusicSettings />
+      </n-tab-pane>
+      <n-tab-pane name="SUBTITLE" tab="Subtitle">
         <n-form
           ref="reviewFormRef"
           class="max-w-screen-md"
