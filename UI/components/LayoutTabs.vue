@@ -20,15 +20,29 @@ function getLimitTabsList() {
       title: "settings",
       fullPath: "/settings",
       name: "settings",
+      icon: "mdi:gamepad-circle",
     },
   ];
 }
 function getPinnedTabsList() {
   return [
     {
-      title: "generate",
+      title: "Generate",
       fullPath: "/generate",
       name: "generate",
+      icon: "mdi:script-text-outline",
+    },
+    {
+      title: "Videos",
+      fullPath: "/videos",
+      name: "generate",
+      icon: "material-symbols:slow-motion-video-rounded",
+    },
+    {
+      title: "Documentation",
+      fullPath: "/docs",
+      name: "generate",
+      icon: "material-symbols:description-rounded",
     },
   ];
 }
@@ -98,7 +112,7 @@ console.log("LayoutTabs.vue");
           <div
             class="hover:color-primary-color hover:bg-[var(--action-color)] cursor-pointer mr-1 transition"
           >
-            <Icon size="14" name="tabler:pinned" />
+            <Icon size="14" :name="tab.icon" />
           </div>
         </template>
       </NTag>

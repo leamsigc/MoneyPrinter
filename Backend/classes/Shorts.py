@@ -64,7 +64,7 @@ class Shorts:
         self.video_urls = []
         self.video_paths = []
         self.videos_quantity_search = 15
-        self.min_duration_search = 10
+        self.min_duration_search = 5
         # Voice related variables
         self.voice = "en_us_001"
         self.voice_prefix = self.voice[:2]
@@ -83,10 +83,14 @@ class Shorts:
 
         # Subtitle
         self.subtitles_position=""
+        self.final_music_video_path=""
 
     @property
     def get_final_video_path(self):
         return self.final_video_path
+    @property
+    def get_final_music_video_path(self):
+        return self.final_music_video_path
 
     @property
     def get_final_script(self):
@@ -286,7 +290,7 @@ class Shorts:
     def CombineVideos(self):
         temp_audio = AudioFileClip(self.tts_path)
         n_threads = 2
-        combined_video_path = combine_videos(self.video_paths, temp_audio.duration, 5, n_threads or 2)
+        combined_video_path = combine_videos(self.video_paths, temp_audio.duration, 10, n_threads or 2)
 
         print(colored(f"[-] Next step: {combined_video_path}", "green"))
         # Put everything together
@@ -309,11 +313,13 @@ class Shorts:
                 json.dump(metadata, file) 
 
     def AddMusic(self, use_music,custom_song_path=""):
-        video_clip = VideoFileClip(f"../../static/assets/temp/{self.final_video_path}")
+        video_clip = VideoFileClip(f"../{self.final_video_path}")
 
+        self.final_music_video_path = f"{uuid4()}-music.mp4"
+        n_threads = 2
         if use_music:
             # if no song path choose random song
-            song_path = f"../../static/assets/music/{custom_song_path}"
+            song_path = f"../static/assets/music/{custom_song_path}"
             if not custom_song_path:
                 song_path = choose_random_song()
             
@@ -331,9 +337,10 @@ class Shorts:
             video_clip = video_clip.set_audio(comp_audio)
             video_clip = video_clip.set_fps(30)
             video_clip = video_clip.set_duration(original_duration)
-            video_clip.write_videofile(f"../../static/generated_videos/{final_video_path}", threads=n_threads or 1)
+
+            video_clip.write_videofile(f"../static/generated_videos/{self.final_music_video_path}", threads=n_threads or 1)
         else:
-            video_clip.write_videofile(f"../../static/generated_videos/{final_video_path}", threads=n_threads or 1)
+            video_clip.write_videofile(f"../static/generated_videos/{self.final_music_video_path}", threads=n_threads or 1)
 
     def Stop(self):
         global GENERATING

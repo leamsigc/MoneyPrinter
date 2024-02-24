@@ -10,11 +10,12 @@
  * @todo [ ] Integration test.
  * @todo [✔] Update the typescript.
  */
+const router = useRouter();
 const API_URL = "http://localhost:8080";
 
 const { globalSettings } = useGlobalSettings();
 const { video } = useVideoSettings();
-const showModal = ref(true);
+const showModal = ref(!video.value.script);
 const extraPrompt = ref(false);
 
 const currentState = ref<"script" | "loading" | "Error">("script");
@@ -59,9 +60,9 @@ const HandleGenerateVideo = async () => {
       method: "POST",
       body: {
         script: video.value.script,
-        voice: video.value.voice,
+        voice: video.value.voice || globalSettings.value.voice,
         search: video.value.search.split(","),
-        aiModel: globalSettings.value.aiModel,
+        aiModel: video.value.aiModel || globalSettings.value.aiModel,
       },
     });
     video.value.finalVideoUrl = data.finalVideo;
@@ -82,6 +83,44 @@ const HandleUpdateSettings = async (
   type: "ALL" | "VOICE" | "SUBTITLE" | "MUSIC"
 ) => {
   settingsModal.value = type;
+};
+
+const HandleAddAudio = async () => {
+  try {
+    currentState.value = "loading";
+    const { data } = await $fetch<{ data: { finalVideo: string } }>(
+      `${API_URL}/api/addAudio`,
+      {
+        method: "POST",
+        body: {
+          finalVideo: video.value.finalVideoUrl,
+          songPath: video.value.selectedAudio,
+          aiModel: video.value.aiModel || globalSettings.value.aiModel,
+        },
+      }
+    );
+    video.value.finalVideoUrl = data.finalVideo;
+  } catch (error) {
+    console.log({ error });
+  } finally {
+    currentState.value = "script";
+  }
+};
+
+const HandleClearAndGoToVideos = () => {
+  video.value = {
+    finalVideoUrl: "",
+    selectedAudio: "",
+    script: "",
+    search: "",
+    voice: "",
+    aiModel: "",
+    extraPrompt: "",
+    videoSubject: "",
+  };
+  settingsModal.value = "IDLE";
+  showModal.value = true;
+  router.push("/videos");
 };
 </script>
 
@@ -133,7 +172,7 @@ const HandleUpdateSettings = async (
       </n-form-item>
 
       <section class="flex justify-end gap-5">
-        <n-button type="tertiary" @click="$router.push('/')" size="large">
+        <n-button type="tertiary" @click="$router.push('/videos')" size="large">
           {{ $t("video.generate.step.one.cancel") }}
         </n-button>
         <n-button type="success" @click="HandleGenerateScript" size="large">
@@ -205,7 +244,7 @@ const HandleUpdateSettings = async (
             >
               <Icon name="material-symbols:person" size="36" />
               <span class="ml-2 font-black text-lg">
-                {{ globalSettings.voice }}
+                {{ video.voice || globalSettings.voice }}
               </span>
             </article>
           </section>
@@ -263,10 +302,33 @@ const HandleUpdateSettings = async (
         </section>
         <section class="col-span-2">
           <header
-            class="col-span-5 flex justify-end"
+            class="col-span-5 flex justify-end gap-4 mb-5"
             v-if="video.finalVideoUrl"
           >
-            <n-button type="success" size="large">Regenerate</n-button>
+            <n-button
+              type="tertiary"
+              dashed
+              size="large"
+              @click="HandleGenerateVideo"
+              >Regenerate</n-button
+            >
+            <n-button
+              type="success"
+              dashed
+              size="large"
+              @click="HandleAddAudio"
+              :disabled="!video.selectedAudio"
+            >
+              Add Music
+            </n-button>
+            <n-button
+              type="default"
+              dashed
+              size="large"
+              @click="HandleClearAndGoToVideos"
+            >
+              Videos
+            </n-button>
           </header>
           <section class="grid place-content-center">
             <div

@@ -45,6 +45,7 @@ const { getCollapsed } = useMenuSetting();
       :routes="menuOptions"
       :drawer-closable="true"
       :drawer-routes="menuOptions"
+      :show-sider="false"
     >
       <n-layout position="absolute">
         <n-layout-header

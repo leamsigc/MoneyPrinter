@@ -253,6 +253,10 @@ def search_and_download():
     script = data["script"]
     ai_model = data["aiModel"]
     voice = data["voice"]
+
+    # Extra options:
+    custom_video = data.get("videoUrls",[])
+    custom_voice = data.get("voiceUrl","")
     # Set the default subtitles_position to the center, bottom
     subtitles_position = data.get("subtitlesPosition", "center,bottom")
     n_threads = data.get('threads', 4) 
@@ -293,11 +297,12 @@ def addAudio():
     data = request.get_json()
     final_video_path = data["finalVideo"]
     song_path = data["songPath"]
+    ai_model = data["aiModel"]
 
     videoClass = Shorts("", 1, ai_model, '')
     videoClass.final_video_path = final_video_path
 
-    videoClass.AddMusic(true,song_path)
+    videoClass.AddMusic(True,song_path)
 
     videoClass.Stop()
     return jsonify(
@@ -305,7 +310,7 @@ def addAudio():
             "status": "success",
             "message": "Search and download complete!",
             "data": {
-                "finalVideo": "../static/generated_videos/" + videoClass.get_final_video_path
+                "finalVideo": "static/generated_videos/" + videoClass.get_final_music_video_path
             }
         }
     )

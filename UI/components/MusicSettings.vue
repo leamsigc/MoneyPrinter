@@ -46,7 +46,7 @@ onMounted(async () => {
     <div>
       <audio controls v-for="song in availableSongs" :key="song" class="mb-5">
         <source
-          :src="`${API_SETTINGS.URL}/static/music/${song}`"
+          :src="`${API_SETTINGS.URL}/static/assets/music/${song}`"
           type="audio/mp4"
         />
       </audio>

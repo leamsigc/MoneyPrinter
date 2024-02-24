@@ -6,6 +6,8 @@ export const useVideoSettings = () => {
         extraPrompt: "",
         search: "",
 
+        aiModel: "g4f",
+
         finalVideoUrl: "",
         //   Audio related 
 
